@@ -56,7 +56,7 @@ public class VwMenu extends CssLayout implements Serializable {
     
     
 	//HorizontalLayout titulo = new HorizontalLayout();
-	public Label lbTitulo = new Label("<div align='center'><h4> S. gestor de trazabilidad <br> <strong>Ingeniería Química</strong></h4></div>", ContentMode.HTML);
+	public Label lbTitulo = new Label("<div align='center'><h4> S. gestor de actividades <br> <strong>Docentes Arquitectura</strong></h4></div>", ContentMode.HTML);
     
     private MenuItem cs;
 	private MenuItem clave; 
@@ -217,7 +217,7 @@ public class VwMenu extends CssLayout implements Serializable {
 		public void menuSelected(MenuItem selectedItem) {
 			if(selectedItem == cs ){
 				UI.getCurrent().getPage().setLocation(
-						"/SGT/");
+						"/SGTA/");
 				//vaciarMenu();
 				UI.getCurrent().getSession().close();
 				//JPAUtil.shutdown();

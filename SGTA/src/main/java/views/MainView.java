@@ -17,8 +17,8 @@ import models.Rol;
 public class MainView extends HorizontalLayout implements Serializable {
 	private static final long serialVersionUID = 1L;
 	private VwMenu menu;
-	/*private VwUsuarios usuario = new VwUsuarios();
-	public VwProyectos proyectos = new VwProyectos();*/
+	private VwUsuarios usuario = new VwUsuarios();
+	//public VwProyectos proyectos = new VwProyectos();
 	@SuppressWarnings("unchecked")
 	private List<Rol> roles = (List<Rol>) VaadinSession.getCurrent().getAttribute("TIPO_USUARIO");
 	public MainView(MyUI ui) {
@@ -42,14 +42,14 @@ public class MainView extends HorizontalLayout implements Serializable {
 		while(iteratorRol.hasNext()) {   
 			rol = iteratorRol.next(); 
 			 
-			menu.addView(new VwInicio(), "inicio", "Inicio", VaadinIcons.HOME);
+			//menu.addView(new VwInicio(), "inicio", "Inicio", VaadinIcons.HOME);
 			
-		/*	if(rol.getIdRol()==1) {//ADMINISTRADOR
+			if(rol.getIdRol()==1) {//ADMINISTRADOR
 				if(!menuAdd.contains("inicio")) {
-					menu.addView(new VwInicio(proyectos), "inicio", "Inicio", VaadinIcons.HOME);
+					menu.addView(new VwInicio(), "inicio", "Inicio", VaadinIcons.HOME);
 					menuAdd.add("inicio");
 				}
-				if(!menuAdd.contains("proyectos")) {
+				/*if(!menuAdd.contains("proyectos")) {
 					menu.addView(proyectos, "proyectos", "Mis proyectos", VaadinIcons.NOTEBOOK);
 					menuAdd.add("proyectos");
 				}
@@ -59,10 +59,10 @@ public class MainView extends HorizontalLayout implements Serializable {
 					menuAdd.add("admin_proyectos");
 				}
 				
-				if(!menuAdd.contains("usuarios")) {
+				*/if(!menuAdd.contains("usuarios")) {
 					menu.addView(usuario, "usuarios", "Usuarios", VaadinIcons.USERS);
 					menuAdd.add("usuarios");
-				}
+				}/*
 				
 				if(!menuAdd.contains("laboratorios")) {
 					menu.addView(new VwLaboratorios(), "laboratorios", "Laboratorios", VaadinIcons.FLASK);
@@ -73,8 +73,8 @@ public class MainView extends HorizontalLayout implements Serializable {
 					menu.addView(new VwDocumentos(), "documentos", "Documentos", VaadinIcons.COPY_O);
 					menuAdd.add("documentos");
 				}
-
-			}else if(rol.getIdRol()==4) {//RESPONSABLE LABORATORIO
+*/
+			}/*else if(rol.getIdRol()==4) {//RESPONSABLE LABORATORIO
 				if(!menuAdd.contains("inicio")) {
 					menu.addView(new VwInicio(proyectos), "inicio", "Inicio", VaadinIcons.HOME);
 					menuAdd.add("inicio");
@@ -152,7 +152,7 @@ public class MainView extends HorizontalLayout implements Serializable {
 		public void afterViewChange(ViewChangeEvent event) {
 			menu.setActiveView(event.getViewName());
 			if(event.getViewName().equals("usuarios")) {
-				//usuario.cargarDatos();
+				usuario.cargarDatos();
 			}
 		};
 	};

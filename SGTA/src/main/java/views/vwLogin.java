@@ -48,7 +48,7 @@ public class vwLogin extends CssLayout implements Serializable {
         username.focus();
 	}
     
-	public void buildUI() {
+	public void buildUI() { 
 		addStyleName("login-screen");
 
         // login form, centered in the available part of the screen
@@ -82,7 +82,7 @@ public class vwLogin extends CssLayout implements Serializable {
 		Image logo = new Image(null,new ThemeResource("images/arquitectura.jpg"));
 		logo.setWidth("70px");
 		
-		Label lblHeader = new Label("<P ALIGN='justify'>Sistema de Gestión de Actividades Docentes Facultad de Arquitectura ULEAM</p>",ContentMode.HTML);
+		Label lblHeader = new Label("<P ALIGN='justify'>Gestor de Actividades Docentes Facultad de Arquitectura ULEAM</p>",ContentMode.HTML);
 		lblHeader.setWidth("160px");
 		lblHeader.addStyleName(ValoTheme.LABEL_SMALL);
 		
@@ -168,8 +168,8 @@ public class vwLogin extends CssLayout implements Serializable {
 	
     private void login() {
     	
-    	//if(LoginController.login(username.getValue(), password.getValue())) { 
-    	if(username.getValue().equals("gsalvatierra3575") && password.getValue().equals("1313253575")) { 
+    	if(LoginController.login(username.getValue(), password.getValue())) { 
+    	//if(username.getValue().equals("gsalvatierra3575") && password.getValue().equals("1313253575")) { 
     		mainView = new MainView(UIistance);
     		UIistance.setContent(mainView); 
     	}else {

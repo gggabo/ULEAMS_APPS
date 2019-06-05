@@ -2,7 +2,7 @@ package views;
 
 import java.io.Serializable;
 
-import com.example.SGTA.MainUI;
+import com.example.SGTA.MyUI;
 import com.vaadin.event.ShortcutAction;
 import com.vaadin.icons.VaadinIcons;
 //import com.vaadin.server.Page;
@@ -40,9 +40,9 @@ public class vwLogin extends CssLayout implements Serializable {
     
     public MainView mainView;
     
-    private MainUI UIistance;
+    private MyUI UIistance;
     
-    public vwLogin(MainUI UI) {
+    public vwLogin(MyUI UI) {
     	this.UIistance = UI;
     	buildUI();
         username.focus();
@@ -79,10 +79,10 @@ public class vwLogin extends CssLayout implements Serializable {
 		vForm.setMargin(false);
 		
 		HorizontalLayout hHeader = new HorizontalLayout();
-		Image logo = new Image(null,new ThemeResource("images/LOGOHEADER.png"));
+		Image logo = new Image(null,new ThemeResource("images/arquitectura.jpg"));
 		logo.setWidth("70px");
 		
-		Label lblHeader = new Label("<P ALIGN='justify'>Sistema de Gestión de Trazabilidad, Laboratorios UTM</p>",ContentMode.HTML);
+		Label lblHeader = new Label("<P ALIGN='justify'>Sistema de Gestión de Actividades Docentes Facultad de Arquitectura ULEAM</p>",ContentMode.HTML);
 		lblHeader.setWidth("160px");
 		lblHeader.addStyleName(ValoTheme.LABEL_SMALL);
 		
@@ -151,8 +151,8 @@ public class vwLogin extends CssLayout implements Serializable {
         loginInformation.setStyleName("login-information");
         Label loginInfoText = new Label(
                 "<h1>Información de aplicación</h1>"
-                        + "Esta aplicación tiene como objetivo gestionar la trazabilidad de materiales realizados en los "
-                        + "diferentes laboratorios de la Carrera de Ingeniería Química de la Universidad Técnica de Manabí",
+                        + "Esta aplicación tiene como objetivo gestionar las actividades realizadas por los docentes de la "
+                        + "Facultad de Arquitectura de Universidad Laica Eloy Alfaro de Manabí",
                 ContentMode.HTML);
         loginInfoText.setWidth("270px");
         loginInformation.addComponent(loginInfoText);
@@ -168,9 +168,10 @@ public class vwLogin extends CssLayout implements Serializable {
 	
     private void login() {
     	
-    	if(LoginController.login(username.getValue(), password.getValue())) { 
+    	//if(LoginController.login(username.getValue(), password.getValue())) { 
+    	if(username.getValue().equals("gsalvatierra3575") && password.getValue().equals("1313253575")) { 
     		mainView = new MainView(UIistance);
-    		UIistance.setContent(mainView);
+    		UIistance.setContent(mainView); 
     	}else {
     		/*ConfirmDialog.show(UIistance, "Información", "Usuario o clave incorrecta",
 					"Aceptar","Cancelar", new ConfirmDialog.Listener() {

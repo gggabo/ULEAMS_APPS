@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import com.example.SGTA.MainUI;
+import com.example.SGTA.MyUI;
 import com.vaadin.icons.VaadinIcons;
 import com.vaadin.navigator.Navigator;
 import com.vaadin.navigator.ViewChangeListener;
@@ -21,7 +21,7 @@ public class MainView extends HorizontalLayout implements Serializable {
 	public VwProyectos proyectos = new VwProyectos();*/
 	@SuppressWarnings("unchecked")
 	private List<Rol> roles = (List<Rol>) VaadinSession.getCurrent().getAttribute("TIPO_USUARIO");
-	public MainView(MainUI ui) {
+	public MainView(MyUI ui) {
 		setSpacing(false);
 		setStyleName("main-screen");
 		 
@@ -38,11 +38,13 @@ public class MainView extends HorizontalLayout implements Serializable {
 		List<String> menuAdd = new ArrayList<>();		
 		
 		Iterator<Rol> iteratorRol = roles.iterator();
-		Rol rol;
-		while(iteratorRol.hasNext()) {
+		Rol rol; 
+		while(iteratorRol.hasNext()) {   
 			rol = iteratorRol.next(); 
+			 
+			menu.addView(new VwInicio(), "inicio", "Inicio", VaadinIcons.HOME);
 			
-			/*if(rol.getIdRol()==1) {//ADMINISTRADOR
+		/*	if(rol.getIdRol()==1) {//ADMINISTRADOR
 				if(!menuAdd.contains("inicio")) {
 					menu.addView(new VwInicio(proyectos), "inicio", "Inicio", VaadinIcons.HOME);
 					menuAdd.add("inicio");

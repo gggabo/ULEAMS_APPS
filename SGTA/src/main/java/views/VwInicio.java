@@ -43,12 +43,12 @@ public class VwInicio extends VerticalLayout implements View, Serializable {
 	
 	public VwInicio() {
 		// TODO Auto-generated constructor stub
-		
+		 
 		Iterator<Rol> iteratorRol = roles.iterator();
 		Rol rol; 
 		String strRol = "";
 		while(iteratorRol.hasNext()) {
-			rol = iteratorRol.next();
+			rol = iteratorRol.next(); 
 			strRol = strRol + rol.getNombre()+"&nbsp;&nbsp;";
 		} 
 		

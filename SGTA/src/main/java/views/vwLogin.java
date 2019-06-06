@@ -24,7 +24,6 @@ import com.vaadin.ui.themes.ValoTheme;
 import controllers.LoginController;
 import de.steinwedel.messagebox.ButtonOption;
 import de.steinwedel.messagebox.MessageBox;
-import utils.message;
 
 
 public class vwLogin extends CssLayout implements Serializable {
@@ -93,7 +92,7 @@ public class vwLogin extends CssLayout implements Serializable {
 		
 		username.setWidth("100%");
         username.setIcon(VaadinIcons.USER);
-        username.setPlaceholder("usuario@utm.edu.ec");
+        username.setPlaceholder("gsalvatierra3575");
         username.setDescription("Digite su usuario");
         username.setStyleName(ValoTheme.TEXTFIELD_ALIGN_CENTER);
         username.addStyleName(ValoTheme.TEXTFIELD_INLINE_ICON);
@@ -134,7 +133,7 @@ public class vwLogin extends CssLayout implements Serializable {
 
 			@Override
             public void buttonClick(Button.ClickEvent event) {
-				message.normalMessage("Función no implementada");
+				//message.normalMessage("Función no implementada");
 				getUI().getPage().open("https://1drv.ms/u/s!AlVNK94rpQ4400WV0dAViMuGQZHl", "_blank");
                 //showNotification(new Notification("Hint: Try anything"));
             }

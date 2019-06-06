@@ -40,7 +40,7 @@ public class MainView extends HorizontalLayout implements Serializable {
 		Iterator<Rol> iteratorRol = roles.iterator();
 		Rol rol; 
 		while(iteratorRol.hasNext()) {   
-			rol = iteratorRol.next(); 
+			rol = iteratorRol.next();  
 			 
 			//menu.addView(new VwInicio(), "inicio", "Inicio", VaadinIcons.HOME);
 			
@@ -49,12 +49,12 @@ public class MainView extends HorizontalLayout implements Serializable {
 					menu.addView(new VwInicio(), "inicio", "Inicio", VaadinIcons.HOME);
 					menuAdd.add("inicio");
 				}
-				/*if(!menuAdd.contains("proyectos")) {
-					menu.addView(proyectos, "proyectos", "Mis proyectos", VaadinIcons.NOTEBOOK);
-					menuAdd.add("proyectos");
+				if(!menuAdd.contains("horarios")) {
+					menu.addView(new VwHorario(), "horarios", "Horarios", VaadinIcons.CALENDAR);
+					menuAdd.add("horarios");
 				}
 				
-				if(!menuAdd.contains("admin_proyectos")) {
+				/*if(!menuAdd.contains("admin_proyectos")) {
 					menu.addView(new VwProyectosAll(), "admin_proyectos", "Todos los proyectos", VaadinIcons.NOTEBOOK);
 					menuAdd.add("admin_proyectos");
 				}

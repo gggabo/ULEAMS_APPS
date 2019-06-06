@@ -170,7 +170,7 @@ public class VwUsuarios extends VerticalLayout implements View, Serializable{
 				clave.setValue("");
 				uploadField.setValue(Usuario.getImagen());	
 				
-				listGridRol.addAll(Usuario.getRoles());
+				listGridRol.addAll(Usuario.getRoles()); 
 				
 			/*	listLabsTw.addAll(UsuarioController.getAllLabsByRol(Usuario.getId()));
 				HashSet<Laboratorio> labsSelect = new HashSet<Laboratorio>(listLabsTw);

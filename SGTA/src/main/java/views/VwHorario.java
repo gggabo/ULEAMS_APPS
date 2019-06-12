@@ -1,11 +1,14 @@
 package views;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 import com.vaadin.icons.VaadinIcons;
 import com.vaadin.navigator.View;
 import com.vaadin.shared.ui.ValueChangeMode;
 import com.vaadin.ui.Button;
+import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.FormLayout;
 import com.vaadin.ui.HorizontalLayout;
@@ -17,7 +20,9 @@ import com.vaadin.ui.MenuBar.Command;
 import com.vaadin.ui.MenuBar.MenuItem;
 import com.vaadin.ui.themes.ValoTheme;
 
+import controllers.PeriodoController;
 import controllers.UsuarioController;
+import models.Periodo;
 import models.Usuario;
 import utils.message;
 
@@ -26,6 +31,8 @@ public class VwHorario extends VerticalLayout implements View, Serializable {
 	
 	public VwHorario() {
 		
+		cargarDatos();
+		setCss();
 		addComponent(buildUI());
 		// TODO Auto-generated constructor stub
 	}
@@ -34,8 +41,16 @@ public class VwHorario extends VerticalLayout implements View, Serializable {
 	public Panel pnlPrincipal = new Panel();
 	public FormLayout mainFrm;
 	public HorizontalLayout toolbar = new HorizontalLayout();
-	public VerticalLayout horarioLayout = new VerticalLayout();
+	public VerticalLayout layoutPrincipal = new VerticalLayout();
 	public MenuBar mainMenu = new MenuBar();
+	
+	public Panel pnlGestionHorario = new Panel();
+	public VerticalLayout horarioLayout = new VerticalLayout();
+	public HorizontalLayout toolbarGestion = new HorizontalLayout();
+	public MenuBar mainMenuGestion = new MenuBar();
+	
+	public ComboBox<Periodo> cmbPeriodo = new ComboBox<>();
+	public List<Periodo> listPeriodo = new ArrayList<>();
 	
 	public Component buildUI() {
 		
@@ -44,12 +59,20 @@ public class VwHorario extends VerticalLayout implements View, Serializable {
 		toolbar.setStyleName(ValoTheme.WINDOW_BOTTOM_TOOLBAR);
 		toolbar.addStyleName(ValoTheme.LAYOUT_HORIZONTAL_WRAPPING);
 		toolbar.setResponsive(true);
-		toolbar.addComponents(mainMenu);
+		toolbar.addComponents(cmbPeriodo);
 		
-		mainMenu.setStyleName(ValoTheme.MENUBAR_BORDERLESS);
-		mainMenu.addStyleName(ValoTheme.MENUBAR_SMALL);
-		mainMenu.setResponsive(true);
-		mainMenu.addItem("Nuevo usuario", VaadinIcons.USER_CHECK, new Command() {
+		toolbarGestion.setWidth("100%");
+		toolbarGestion.setSpacing(true);
+		toolbarGestion.setStyleName(ValoTheme.WINDOW_BOTTOM_TOOLBAR);
+		toolbarGestion.addStyleName(ValoTheme.LAYOUT_HORIZONTAL_WRAPPING);
+		toolbarGestion.setResponsive(true);
+		toolbarGestion.addComponents(mainMenuGestion);
+		
+		mainMenuGestion.setStyleName(ValoTheme.MENUBAR_BORDERLESS);
+		mainMenuGestion.addStyleName(ValoTheme.MENUBAR_SMALL);
+		mainMenuGestion.setResponsive(true);
+		
+		mainMenuGestion.addItem("Agregar docente", VaadinIcons.USER_CHECK, new Command() {
 			private static final long serialVersionUID = 1L;
 			@Override
 			public void menuSelected(MenuItem selectedItem) {
@@ -60,16 +83,16 @@ public class VwHorario extends VerticalLayout implements View, Serializable {
 		
 	//	mainMenu.addItem("Imprimir", VaadinIcons.PRINT, null);		
 		
-		mainMenu.addItem("Importar usuarios", VaadinIcons.INSERT, new Command() {
+		/*mainMenu.addItem("Importar usuarios", VaadinIcons.INSERT, new Command() {
 			private static final long serialVersionUID = 1L;
 			@Override
-			public void menuSelected(MenuItem selectedItem) {
+			public void menuSelected(MenuItem selectedItem) {*/
 				//importUserView();
 				
 				/*userNewEdit(null);
 				accion="guardar";*/
-			}
-		});
+			/*}
+		});*/
 		
 	/*	filtertxt.setPlaceholder("Buscar por nombres o cedula");
 		filtertxt.setValueChangeMode(ValueChangeMode.LAZY);
@@ -152,17 +175,40 @@ public class VwHorario extends VerticalLayout implements View, Serializable {
 			hl.addComponents(b,b2);
 			return hl;			
 		}).setCaption("Opciones");*/
-
-		horarioLayout.addComponents(toolbar);//,filtering,gridUsuario);
+		
+		horarioLayout.addComponents(toolbarGestion, new Button("asgasdg"));
 		horarioLayout.setMargin(false);
 		
-		pnlPrincipal.setCaption("Asignación de actividades docentes");
+		pnlGestionHorario.setCaption("Asignación de actividades docentes");
+		pnlGestionHorario.setIcon(VaadinIcons.CALENDAR);
+		pnlGestionHorario.setContent(horarioLayout);
+		
+		layoutPrincipal.addComponents(toolbar, pnlGestionHorario);//,filtering,gridUsuario);
+		layoutPrincipal.setMargin(false);
+		
+		pnlPrincipal.setCaption("Gestión docente");
 		pnlPrincipal.setIcon(VaadinIcons.SUITCASE);
-		pnlPrincipal.setContent(horarioLayout);
+		pnlPrincipal.setContent(layoutPrincipal);
 		
 		mainLayout.addComponents(pnlPrincipal);
 		return mainLayout;
 	}
 	
+	public void setCss() {
+		cmbPeriodo.setWidth("30%");
+		cmbPeriodo.setTextInputAllowed(false);
+		cmbPeriodo.setEmptySelectionAllowed(false);
+		cmbPeriodo.setStyleName(ValoTheme.COMBOBOX_SMALL);
+		
+	}
+	
+	public void cargarDatos() {
+		listPeriodo = PeriodoController.findAll();
+		cmbPeriodo.setItems(listPeriodo);
+		cmbPeriodo.setItemCaptionGenerator(Periodo::getPeriodo);
+		if (listPeriodo.size() > 0) {
+			cmbPeriodo.setSelectedItem(listPeriodo.get(0));
+		}
+	}
 
 }

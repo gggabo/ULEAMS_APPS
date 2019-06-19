@@ -67,6 +67,9 @@ public class Usuario implements Serializable {
 	inverseJoinColumns = @JoinColumn(name ="ID_ROL"))
 	private List<Rol> roles = new ArrayList<>();
 	
+	@OneToMany(mappedBy = "docente", cascade = CascadeType.ALL, orphanRemoval = true)
+	private List<DocenteActividad>  docenteActividades = new ArrayList<>();	
+	
 	/*@OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<ProyectoParticipante>  proyectoParticipantes = new ArrayList<>();
 	
@@ -113,6 +116,14 @@ public class Usuario implements Serializable {
 	public void setLaboratorios(List<Laboratorio> laboratorios) {
 		this.laboratorios = laboratorios;
 	}*/
+
+	public List<DocenteActividad> getDocenteActividades() {
+		return docenteActividades;
+	}
+
+	public void setDocenteActividades(List<DocenteActividad> docenteActividades) {
+		this.docenteActividades = docenteActividades;
+	}
 
 	public String getCedula() {
 		return Cedula;

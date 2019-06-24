@@ -7,9 +7,11 @@ import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 @Entity 
@@ -25,9 +27,9 @@ public class Actividad implements Serializable {
 	
 	@Column(name = "ACTIVIDAD")
 	private String actividad;
-	
-	@OneToMany(mappedBy = "actividad", cascade = CascadeType.ALL, orphanRemoval = true)
-	private List<DocenteActividad>  docenteActividades = new ArrayList<>();
+		
+	@ManyToMany(mappedBy = "actividades", cascade = {CascadeType.ALL }, fetch = FetchType.EAGER)
+	private List<DocenteActividad> docenteActividades = new ArrayList<>();
 	
 	@Column(name = "ESTADO")
 	private int estado;
@@ -92,7 +94,7 @@ public class Actividad implements Serializable {
 
 	@Override
 	public String toString() {
-		return "Actividad [idActividad=" + idActividad + ", actividad=" + actividad + ", estado=" + estado + "]";
+		return actividad;
 	}
 	
 	

@@ -4,6 +4,8 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.vaadin.data.HasValue.ValueChangeEvent;
+import com.vaadin.data.HasValue.ValueChangeListener;
 import com.vaadin.icons.VaadinIcons;
 import com.vaadin.navigator.View;
 import com.vaadin.shared.ui.ValueChangeMode;
@@ -18,6 +20,7 @@ import com.vaadin.ui.Label;
 import com.vaadin.ui.MenuBar;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.TextField;
+import com.vaadin.ui.TwinColSelect;
 import com.vaadin.ui.UI;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Grid.SelectionMode;
@@ -25,10 +28,17 @@ import com.vaadin.ui.MenuBar.Command;
 import com.vaadin.ui.MenuBar.MenuItem;
 import com.vaadin.ui.themes.ValoTheme;
 
+import controllers.ActividadController;
+import controllers.DocenteActividadController;
 import controllers.PeriodoController;
+import controllers.RolController;
 import controllers.UsuarioController;
+import de.steinwedel.messagebox.ButtonOption;
+import de.steinwedel.messagebox.MessageBox;
 import models.Actividad;
+import models.DocenteActividad;
 import models.Periodo;
+import models.Rol;
 import models.Usuario;
 import utils.dialogWindow;
 import utils.message;
@@ -65,9 +75,16 @@ public class VwAsignacionActividad extends VerticalLayout implements View, Seria
 	public Button clearFilterDocenteActividad = new Button(VaadinIcons.CLOSE_CIRCLE);
 	public TextField filtertxtDocenteActividad = new TextField();
 	
-	public Grid<Usuario> gridActividadDocente = new Grid<Usuario>();
-	public List<Usuario> listActividadDocente = new ArrayList<>();
+	public Grid<DocenteActividad> gridActividadDocente = new Grid<DocenteActividad>();
+	public List<DocenteActividad> listActividadDocente = new ArrayList<>();
 	
+	public TwinColSelect<Actividad> twActividad = new TwinColSelect<>();
+	public List<Actividad> listActividad = new ArrayList<>();
+	
+	public Rol rolDocente = RolController.getSpecificRolById(4L);
+	public Rol rolAdmin= RolController.getSpecificRolById(1L);
+	public List<Rol> listRoles = new ArrayList<>();
+		
 	public Component buildUI() {
 		
 		toolbar.setWidth("100%");
@@ -77,6 +94,18 @@ public class VwAsignacionActividad extends VerticalLayout implements View, Seria
 		toolbar.setResponsive(true);
 		toolbar.addComponents(new Label("Periodo "),cmbPeriodo);
 		toolbar.setExpandRatio(cmbPeriodo, 1);
+		
+		/*listRoles.add(rolDocente);
+		listRoles.add(rolAdmin);*/
+		cmbPeriodo.addValueChangeListener(new ValueChangeListener<Periodo>() {
+			private static final long serialVersionUID = 1L;
+
+			@Override
+			public void valueChange(ValueChangeEvent<Periodo> event) {
+				listActividadDocente = DocenteActividadController.getAllByPeriodo(cmbPeriodo.getValue().getIdPerido(), rolAdmin, rolDocente);
+				gridActividadDocente.setItems(listActividadDocente);
+			}
+		});
 		
 		toolbarGestion.setWidth("100%");
 		toolbarGestion.setSpacing(true);
@@ -128,9 +157,9 @@ public class VwAsignacionActividad extends VerticalLayout implements View, Seria
 		filtertxtDocenteActividad.setValueChangeMode(ValueChangeMode.LAZY);
 		filtertxtDocenteActividad.setSizeFull();
 		filtertxtDocenteActividad.addValueChangeListener(e ->{
-			/*listUsuarios.clear();
-			listUsuarios.addAll(UsuarioController.search(filtertxt.getValue()));
-			gridUsuario.setItems(listUsuarios);*/
+			listActividadDocente.clear();
+			listActividadDocente.addAll(DocenteActividadController.search(cmbPeriodo.getValue().getIdPerido(),filtertxtDocenteActividad.getValue()));
+			gridActividadDocente.setItems(listActividadDocente);
 		}); 
 		
 		clearFilterDocenteActividad.addClickListener(e->{
@@ -142,12 +171,17 @@ public class VwAsignacionActividad extends VerticalLayout implements View, Seria
 		filteringDocenteActividad.addStyleName("custom-margins");
 				   
 		//gridActividadDocente.addColumn(Usuario::getCedula).setCaption("CÉDULA/DNI");
-		gridActividadDocente.addColumn(Usuario -> Usuario.getApellido_paterno() +" "+ Usuario.getApellido_materno() +" "+
-		Usuario.getNombre_uno() +" "+ Usuario.getNombre_dos()
-				).setCaption("NOMBRES Y APELLIDOS").setId("NOMBRES");
-		gridActividadDocente.addColumn(Usuario::getNombre_usuario).setCaption("ACTIVIDADES DOCENTES ASIGNADAS");
-		
 		gridActividadDocente.setWidth("100%");
+		gridActividadDocente.setBodyRowHeight(50);
+		gridActividadDocente.addColumn(DocenteActividad -> DocenteActividad.getDocente().getCedula()).setCaption("CÉDULA");
+		gridActividadDocente.addColumn(DocenteActividad -> DocenteActividad.getDocente().getApellido_paterno() +" "+ DocenteActividad.getDocente().getApellido_materno() +" "+
+				DocenteActividad.getDocente().getNombre_uno() +" "+ DocenteActividad.getDocente().getNombre_dos()
+				).setCaption("NOMBRES Y APELLIDOS").setId("NOMBRES");
+		//gridActividadDocente.addColumn(DocenteActividad-> DocenteActividad.getActividades().toString()).setCaption("ACTIVIDADES DOCENTES ASIGNADAS");
+		gridActividadDocente.addComponentColumn(DocenteActividad ->{
+			return DocenteActividad.getActividadesRender();			
+		}).setCaption("ACTIVIDADES DOCENTES ASIGNADAS");
+		
 		gridActividadDocente.setSelectionMode(SelectionMode.NONE);
 		gridActividadDocente.addComponentColumn(Usuario -> {
 	 
@@ -210,7 +244,7 @@ public class VwAsignacionActividad extends VerticalLayout implements View, Seria
 		horarioLayout.setMargin(false);
 		
 		pnlGestionHorario.setCaption("Asignación de actividades docentes");
-		pnlGestionHorario.setIcon(VaadinIcons.CALENDAR);
+		pnlGestionHorario.setIcon(VaadinIcons.TASKS);
 		pnlGestionHorario.setContent(horarioLayout);
 		
 		layoutPrincipal.addComponents(toolbar, pnlGestionHorario);//,filtering,gridUsuario);
@@ -239,6 +273,14 @@ public class VwAsignacionActividad extends VerticalLayout implements View, Seria
 		if (listPeriodo.size() > 0) {
 			cmbPeriodo.setSelectedItem(listPeriodo.get(0));
 		}
+		
+		listActividadDocente = DocenteActividadController.getAllByPeriodo(cmbPeriodo.getValue().getIdPerido(), rolAdmin, rolDocente);
+		gridActividadDocente.setItems(listActividadDocente);
+		
+		listActividad = ActividadController.findAll();
+		twActividad.setItems(listActividad);
+		twActividad.setItemCaptionGenerator(Actividad::getActividad);
+		
 	}
 	
 	public VerticalLayout usuarioLayout = new VerticalLayout();
@@ -278,6 +320,59 @@ public class VwAsignacionActividad extends VerticalLayout implements View, Seria
 	 
 			Button b = new Button("Seleccionar");
 			b.addClickListener(clickb ->{ 
+				
+				DocenteActividad da = new DocenteActividad();
+				da.setDocente(Usuario);
+				da.setPeriodo(cmbPeriodo.getValue());
+				
+				if(listActividadDocente.contains(da)){
+					message.warringMessage("El registro ya está seleccionado");
+					return;
+				}
+				
+				twActividad.clear();
+				twActividad.setRows(6);
+				twActividad.setWidth("530px");
+				
+				HorizontalLayout hl = new HorizontalLayout();
+				hl.setCaption("Actividades a asignar");
+				hl.addComponent(twActividad);
+				
+				/*Iterator<Componente> iterator = ComponenteController.getAllComponentByEquipo(Equipo.getIdEquipo()).iterator();
+				List<Componente> listComp = new ArrayList<>();
+				TwinColSelect<Componente> twComp = new TwinColSelect<>();
+				while(iterator.hasNext()) {
+					Componente c = iterator.next();
+					listComp.add(c);
+				}	
+				twComp.setItems(listComp);
+				twComp.setItemCaptionGenerator(Componente::getNombre);
+				twComp.setRows(6);
+				twComp.setWidth("530px");
+
+				hl.addComponents(twComp);
+                */
+				MessageBox.createQuestion()
+				.withCaption("Actividades docente")
+				.withCancelButton(ButtonOption.caption("Cancelar"))
+				.withMessage(hl)
+				.withOkButton(() -> {
+					List<Actividad> listActividadSave = new ArrayList<>(twActividad.getValue());
+					da.setActividades(listActividadSave);
+					
+					listActividadDocente.add(da);
+					gridActividadDocente.setItems(listActividadDocente); 
+					
+					DocenteActividadController.save(da);
+					
+					/*List<Componente> complist = new ArrayList<>(twComp.getSelectedItems());
+					te.setComponentes(complist);*/
+
+			    },ButtonOption.caption("Aceptar"))
+				.open();
+				
+				//da.setActividades(null);
+				
 				/*ProyectoParticipante pp = new ProyectoParticipante(Usuario, false);
 				
 				if(!listProyectoParticipante.contains(pp)) { 
@@ -286,6 +381,7 @@ public class VwAsignacionActividad extends VerticalLayout implements View, Seria
 				}else {
 					message.warringMessage("El registro ya está seleccionado");
 				}*/
+				
 
 				
 			});

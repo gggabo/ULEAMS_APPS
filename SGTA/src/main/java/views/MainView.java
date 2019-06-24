@@ -53,7 +53,10 @@ public class MainView extends HorizontalLayout implements Serializable {
 					menu.addView(new VwAsignacionActividad(), "Actividadesdocente", "Actividades docente", VaadinIcons.TASKS);
 					menuAdd.add("Actividades docente");
 				}
-				
+				if(!menuAdd.contains("Gestor de horarios")) {
+					menu.addView(new VwAsignacionActividad(), "Gestorhorarios", "Gestor de horarios", VaadinIcons.CALENDAR_USER);
+					menuAdd.add("AGestor de horarios");
+				}
 				/*if(!menuAdd.contains("admin_proyectos")) {
 					menu.addView(new VwProyectosAll(), "admin_proyectos", "Todos los proyectos", VaadinIcons.NOTEBOOK);
 					menuAdd.add("admin_proyectos");

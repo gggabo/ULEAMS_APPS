@@ -497,13 +497,13 @@ public class VwUsuarios extends VerticalLayout implements View, Serializable{
 				break;
 			}
 		}
-		/*if(!c) {
+		if(!c) {
 			listGridRol.add(rol);
-			if(rol.getIdRol()==4) {
+			/*if(rol.getIdRol()==4) {
 				twLaboratorio.setVisible(true);
-			}
+			}*/
 			gridRol.setItems(listGridRol);
-		}*/
+		}
 		
 	}
 	

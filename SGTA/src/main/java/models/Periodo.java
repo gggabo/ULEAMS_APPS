@@ -41,7 +41,7 @@ public class Periodo implements Serializable {
 		this.periodo = periodo;
 	}
 
-	public long getIdPerido() {
+	public long getIdPerido() { 
 		return idPerido;
 	}
 
@@ -55,6 +55,12 @@ public class Periodo implements Serializable {
 
 	public void setPeriodo(String periodo) {
 		this.periodo = periodo;
+	}
+
+	@Override
+	public String toString() {
+		return "Periodo [idPerido=" + idPerido + ", periodo=" + periodo + ", docenteActividades=" + docenteActividades
+				+ ", estado=" + estado + "]";
 	}
 
 	@Override

@@ -31,6 +31,9 @@ public class Actividad implements Serializable {
 	@ManyToMany(mappedBy = "actividades", cascade = {CascadeType.ALL }, fetch = FetchType.EAGER)
 	private List<DocenteActividad> docenteActividades = new ArrayList<>();
 	
+	@OneToMany(mappedBy = "actividad", cascade = CascadeType.ALL, orphanRemoval = true)
+	private List<HorarioDocenteActividad>  horarioDocenteActividades = new ArrayList<>();
+	
 	@Column(name = "ESTADO")
 	private int estado;
 

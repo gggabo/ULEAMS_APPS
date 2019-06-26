@@ -2,7 +2,11 @@ package views;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
 import com.vaadin.data.HasValue.ValueChangeEvent;
 import com.vaadin.data.HasValue.ValueChangeListener;
@@ -29,14 +33,19 @@ import com.vaadin.ui.MenuBar.MenuItem;
 import com.vaadin.ui.themes.ValoTheme;
 
 import controllers.ActividadController;
+import controllers.DiaController;
 import controllers.DocenteActividadController;
+import controllers.HoraController;
 import controllers.PeriodoController;
 import controllers.RolController;
 import controllers.UsuarioController;
 import de.steinwedel.messagebox.ButtonOption;
 import de.steinwedel.messagebox.MessageBox;
 import models.Actividad;
+import models.Dia;
 import models.DocenteActividad;
+import models.Hora;
+import models.HorarioDocenteActividad;
 import models.Periodo;
 import models.Rol;
 import models.Usuario;
@@ -52,6 +61,7 @@ public class VwAsignacionActividad extends VerticalLayout implements View, Seria
 		initBuscarUsuario();
 		setCss();
 		addComponent(buildUI());
+		initSetHorario();
 		// TODO Auto-generated constructor stub
 	}
 	
@@ -176,7 +186,7 @@ public class VwAsignacionActividad extends VerticalLayout implements View, Seria
 		gridActividadDocente.addColumn(DocenteActividad -> DocenteActividad.getDocente().getCedula()).setCaption("CÉDULA");
 		gridActividadDocente.addColumn(DocenteActividad -> DocenteActividad.getDocente().getApellido_paterno() +" "+ DocenteActividad.getDocente().getApellido_materno() +" "+
 				DocenteActividad.getDocente().getNombre_uno() +" "+ DocenteActividad.getDocente().getNombre_dos()
-				).setCaption("NOMBRES Y APELLIDOS").setId("NOMBRES");
+				).setCaption("NOMBRES Y APELLIDOS").setId("NOMBRES").setExpandRatio(0);
 		//gridActividadDocente.addColumn(DocenteActividad-> DocenteActividad.getActividades().toString()).setCaption("ACTIVIDADES DOCENTES ASIGNADAS");
 		gridActividadDocente.addComponentColumn(DocenteActividad ->{
 			return DocenteActividad.getActividadesRender();			
@@ -185,45 +195,55 @@ public class VwAsignacionActividad extends VerticalLayout implements View, Seria
 		gridActividadDocente.setSelectionMode(SelectionMode.NONE);
 		gridActividadDocente.addComponentColumn(Usuario -> {
 	 
-			Button b = new Button("Editar");
+			Button b = new Button();
 			b.addClickListener(clickb ->{  
-				/*userNewEdit(Usuario);
-				cedula.setValue(Usuario.getCedula());
-				apellido_paterno.setValue(Usuario.getApellido_paterno());
-				apellido_materno.setValue(Usuario.getApellido_materno());
-				nombre_uno.setValue(Usuario.getNombre_uno());
-				nombre_dos.setValue(Usuario.getNombre_dos());
-				correo.setValue(Usuario.getCorreo()); 
-				telefono.setValue(Usuario.getTelefono());
-				nombre_usuario.setValue(Usuario.getNombre_usuario());
-				clave.setValue("");
-				uploadField.setValue(Usuario.getImagen());	
-				
-				listGridRol.addAll(Usuario.getRoles()); 
-				
-				listLabsTw.addAll(UsuarioController.getAllLabsByRol(Usuario.getId()));
-				HashSet<Laboratorio> labsSelect = new HashSet<Laboratorio>(listLabsTw);
-				
-				twLaboratorio.setValue(labsSelect);
-				
-				Iterator<Rol> rolIterator = listGridRol.iterator(); 
-				Rol r; 
-				while(rolIterator.hasNext()) {
-					r=rolIterator.next();
-					if(r.getIdRol()==4) { 
-						twLaboratorio.setVisible(true);
-					}
-				}
-				
-				gridRol.setItems(listGridRol);
-				accion = "modificar";*/
-				
+				setHorario(Usuario);
 			});
-			b.setStyleName(ValoTheme.BUTTON_FRIENDLY);
+			b.setStyleName(ValoTheme.BUTTON_PRIMARY);
 			b.addStyleName(ValoTheme.BUTTON_SMALL);
-			b.setIcon(VaadinIcons.EDIT);
+			b.setIcon(VaadinIcons.CALENDAR_CLOCK);
 			
-			Button b2 = new Button("Eliminar");
+			Button b3 = new Button();
+			b3.addClickListener(clickb ->{  
+				twActividad.clear();
+				twActividad.setRows(6);
+				twActividad.setWidth("530px");
+				Set<Actividad> act = new HashSet<>(Usuario.getActividades());
+				twActividad.setValue(act);
+				
+				HorizontalLayout hl = new HorizontalLayout();
+				hl.setCaption("Actividades a asignar");
+				hl.addComponent(twActividad); 
+			
+				MessageBox.createQuestion()
+				.withCaption("Actividades docente")
+				.withCancelButton(ButtonOption.caption("Cancelar"))
+				.withMessage(hl)
+				.withOkButton(() -> {
+					
+					Usuario.setActividades(new ArrayList<>(twActividad.getValue()));
+					
+					DocenteActividadController.update(Usuario);
+					
+					listActividadDocente = DocenteActividadController.getAllByPeriodo(cmbPeriodo.getValue().getIdPerido(), rolAdmin, rolDocente);
+					gridActividadDocente.setItems(listActividadDocente);
+					
+					/*List<Actividad> listActividadSave = new ArrayList<>(twActividad.getValue());
+					da.setActividades(listActividadSave);
+					
+					listActividadDocente.add(da);
+					gridActividadDocente.setItems(listActividadDocente); */
+					
+					//DocenteActividadController.save(da);
+
+			    },ButtonOption.caption("Aceptar"))
+				.open();
+			});
+			b3.setStyleName(ValoTheme.BUTTON_FRIENDLY);
+			b3.addStyleName(ValoTheme.BUTTON_SMALL);
+			b3.setIcon(VaadinIcons.TASKS);
+			
+			Button b2 = new Button();
 			b2.addClickListener(clickb2 ->{
 				/*listUsuarios.remove(Usuario);
 				gridUsuario.setItems(listUsuarios);
@@ -233,12 +253,12 @@ public class VwAsignacionActividad extends VerticalLayout implements View, Seria
 			});
 			b2.setStyleName(ValoTheme.BUTTON_DANGER);
 			b2.addStyleName(ValoTheme.BUTTON_SMALL);
-			b2.setIcon(VaadinIcons.ERASER);
+			b2.setIcon(VaadinIcons.TRASH);
 			
 			HorizontalLayout hl = new HorizontalLayout();
-			hl.addComponents(b,b2);
+			hl.addComponents(b,b3,b2);
 			return hl;			
-		}).setCaption("Opciones");
+		}).setCaption("Opciones").setExpandRatio(1);
 		
 		horarioLayout.addComponents(toolbarGestion, filteringDocenteActividad, gridActividadDocente);
 		horarioLayout.setMargin(false);
@@ -257,6 +277,73 @@ public class VwAsignacionActividad extends VerticalLayout implements View, Seria
 		mainLayout.addComponents(pnlPrincipal);
 		return mainLayout;
 	}
+	
+	private ComboBox<Actividad> cmbActividadAsignada = new ComboBox<>();
+	private ComboBox<Dia> cmbDia = new ComboBox<>();
+	private ComboBox<Hora> cmbHora = new ComboBox<>();
+	private Button btnAddDiaHora = new Button("Agregar");
+	private Grid<HorarioDocenteActividad> gridHorarioDocente = new Grid<HorarioDocenteActividad>();
+	private List<HorarioDocenteActividad> listHorarioDocente = new ArrayList<>();
+		
+	private void setHorario(DocenteActividad docenteAct) {
+		//cargarDatosUsuario();
+		dialogWindow dialogReactivoWindow = new dialogWindow("Gestión de horarios", VaadinIcons.CALENDAR);
+		
+		cmbActividadAsignada.setItems(docenteAct.getActividades());
+		
+		//VerticalLayout vlRoot = new VerticalLayout();
+		HorizontalLayout hlInformacion = new HorizontalLayout();
+		hlInformacion.addComponents(cmbActividadAsignada,cmbDia,cmbHora,btnAddDiaHora);
+
+		dialogReactivoWindow.getCancelButton().addClickListener(e -> {
+			dialogReactivoWindow.close();
+		});
+		
+		VerticalLayout vroot = new VerticalLayout();
+		vroot.addComponents(hlInformacion,gridHorarioDocente);
+		vroot.setMargin(false);
+		vroot.setSpacing(false);
+		
+		dialogReactivoWindow.setResponsive(true);
+		dialogReactivoWindow.setWidth("65%");
+		dialogReactivoWindow.addComponentBody(vroot);
+		dialogReactivoWindow.getOkButton().setVisible(false);
+		dialogReactivoWindow.getCancelButton().setCaption("Cerrar");
+		dialogReactivoWindow.getFooterText().setValue("Opciones");
+		dialogReactivoWindow.getLayoutComponent().setMargin(false);
+		UI.getCurrent().addWindow(dialogReactivoWindow);
+	}
+	
+	private void initSetHorario() {
+		gridHorarioDocente.setWidth("100%");
+		gridHorarioDocente.setBodyRowHeight(50);
+		gridHorarioDocente.addColumn(HorarioDocenteActividad -> HorarioDocenteActividad.getHora()).setCaption("HORA").setId("hora").setExpandRatio(0);
+		gridHorarioDocente.addColumn(HorarioDocenteActividad -> HorarioDocenteActividad.getActividad());
+		
+		gridHorarioDocente.setSelectionMode(SelectionMode.NONE);
+		gridHorarioDocente.addComponentColumn(Usuario -> {
+			 
+			Button b = new Button("Quitar");
+			b.addClickListener(clickb ->{  
+				//setHorario(Usuario);
+			});
+			b.setStyleName(ValoTheme.BUTTON_DANGER);
+			b.addStyleName(ValoTheme.BUTTON_SMALL);
+			b.setIcon(VaadinIcons.DEL);
+			
+			HorizontalLayout hl = new HorizontalLayout();
+			hl.addComponents(b);
+			return hl;			
+		}).setCaption("Opciones").setExpandRatio(1);
+		
+		cmbDia.setItems(DiaController.findAll());
+		cmbDia.setItemCaptionGenerator(Dia::getDia);
+		
+		cmbHora.setItems(HoraController.findAll());
+		cmbHora.setItemCaptionGenerator(Hora::getHoras);;
+		
+	}
+	
 	
 	public void setCss() {
 		cmbPeriodo.setWidth("30%");
@@ -337,21 +424,7 @@ public class VwAsignacionActividad extends VerticalLayout implements View, Seria
 				HorizontalLayout hl = new HorizontalLayout();
 				hl.setCaption("Actividades a asignar");
 				hl.addComponent(twActividad);
-				
-				/*Iterator<Componente> iterator = ComponenteController.getAllComponentByEquipo(Equipo.getIdEquipo()).iterator();
-				List<Componente> listComp = new ArrayList<>();
-				TwinColSelect<Componente> twComp = new TwinColSelect<>();
-				while(iterator.hasNext()) {
-					Componente c = iterator.next();
-					listComp.add(c);
-				}	
-				twComp.setItems(listComp);
-				twComp.setItemCaptionGenerator(Componente::getNombre);
-				twComp.setRows(6);
-				twComp.setWidth("530px");
-
-				hl.addComponents(twComp);
-                */
+			
 				MessageBox.createQuestion()
 				.withCaption("Actividades docente")
 				.withCancelButton(ButtonOption.caption("Cancelar"))
@@ -364,9 +437,6 @@ public class VwAsignacionActividad extends VerticalLayout implements View, Seria
 					gridActividadDocente.setItems(listActividadDocente); 
 					
 					DocenteActividadController.save(da);
-					
-					/*List<Componente> complist = new ArrayList<>(twComp.getSelectedItems());
-					te.setComponentes(complist);*/
 
 			    },ButtonOption.caption("Aceptar"))
 				.open();

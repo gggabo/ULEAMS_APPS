@@ -2,16 +2,11 @@ package models;
 
 import java.io.Serializable;
 import java.time.LocalTime;
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 @Entity 
@@ -30,9 +25,9 @@ public class Hora implements Serializable {
 	@Column(name = "HORA2")
 	private LocalTime hora2;
 	
-	@OneToMany(mappedBy = "hora", cascade = CascadeType.ALL, orphanRemoval = true)
+	/*@OneToMany(mappedBy = "hora", cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<HorarioDocenteActividad>  horarioDocenteActividades = new ArrayList<>();
-	
+	*/
 	@Column(name = "ESTADO")
 	private int estado;
 	
@@ -72,7 +67,7 @@ public class Hora implements Serializable {
 	}
 
 	public String getHoras() {
-		return hora1.toString() + hora2.toString();
+		return hora1.toString() +" - "+ hora2.toString();
 	}
 
 
@@ -84,7 +79,7 @@ public class Hora implements Serializable {
 
 
 
-	public List<HorarioDocenteActividad> getHorarioDocenteActividades() {
+/*	public List<HorarioDocenteActividad> getHorarioDocenteActividades() {
 		return horarioDocenteActividades;
 	}
 
@@ -92,7 +87,7 @@ public class Hora implements Serializable {
 
 	public void setHorarioDocenteActividades(List<HorarioDocenteActividad> horarioDocenteActividades) {
 		this.horarioDocenteActividades = horarioDocenteActividades;
-	}
+	}*/
 
 
 
@@ -141,7 +136,7 @@ public class Hora implements Serializable {
 	@Override
 	public String toString() {
 		return "Hora [idHora=" + idHora + ", hora1=" + hora1 + ", hora2=" + hora2 + ", horarioDocenteActividades="
-				+ horarioDocenteActividades + ", estado=" + estado + "]";
+				+ ", estado=" + estado + "]";
 	}
 
 	

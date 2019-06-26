@@ -3,11 +3,7 @@ package controllers;
 import java.io.Serializable;
 import java.util.List;
 
-import javax.persistence.Query;
-
 import models.Actividad;
-import models.Periodo;
-import models.Rol;
 import services.JPAService;
 
 public class ActividadController implements Serializable {

@@ -27,7 +27,7 @@ public class Dia implements Serializable {
 	private String dia;
 	
 	@OneToMany(mappedBy = "dia", cascade = CascadeType.ALL, orphanRemoval = true)
-	private List<HorarioDocenteActividad>  horarioDocenteActividades = new ArrayList<>();	
+	private List<HorarioDocente>  horarioDocenteActividades = new ArrayList<>();	
 	
 	@Column(name = "ESTADO")
 	private int estado;

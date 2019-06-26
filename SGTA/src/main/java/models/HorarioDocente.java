@@ -13,7 +13,7 @@ import javax.persistence.JoinColumn;
 
 @Entity 
 @Table(name = "TBL_HORARIO_DOCENTE_ACTIVIDAD")
-public class HorarioDocenteActividad implements Serializable {
+public class HorarioDocente implements Serializable {
 	private static final long serialVersionUID = 1L;
 	
 	@Id
@@ -37,7 +37,7 @@ public class HorarioDocenteActividad implements Serializable {
 	@JoinColumn(name = "ID_ACTIVIDAD")
 	private Actividad actividad;
 	
-	public HorarioDocenteActividad() {
+	public HorarioDocente() {
 		// TODO Auto-generated constructor stub
 	}
 
@@ -79,6 +79,37 @@ public class HorarioDocenteActividad implements Serializable {
 
 	public void setActividad(Actividad actividad) {
 		this.actividad = actividad;
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((dia == null) ? 0 : dia.hashCode());
+		result = prime * result + ((hora == null) ? 0 : hora.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		HorarioDocente other = (HorarioDocente) obj;
+		if (dia == null) {
+			if (other.dia != null)
+				return false;
+		} else if (!dia.equals(other.dia))
+			return false;
+		if (hora == null) {
+			if (other.hora != null)
+				return false;
+		} else if (!hora.equals(other.hora))
+			return false;
+		return true;
 	}
 
 	

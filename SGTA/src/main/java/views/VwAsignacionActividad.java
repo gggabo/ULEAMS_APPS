@@ -2,9 +2,7 @@ package views;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
@@ -36,6 +34,7 @@ import controllers.ActividadController;
 import controllers.DiaController;
 import controllers.DocenteActividadController;
 import controllers.HoraController;
+import controllers.HorarioDocenteController;
 import controllers.PeriodoController;
 import controllers.RolController;
 import controllers.UsuarioController;
@@ -45,7 +44,7 @@ import models.Actividad;
 import models.Dia;
 import models.DocenteActividad;
 import models.Hora;
-import models.HorarioDocenteActividad;
+import models.HorarioDocente;
 import models.Periodo;
 import models.Rol;
 import models.Usuario;
@@ -256,7 +255,7 @@ public class VwAsignacionActividad extends VerticalLayout implements View, Seria
 			b2.setIcon(VaadinIcons.TRASH);
 			
 			HorizontalLayout hl = new HorizontalLayout();
-			hl.addComponents(b,b3,b2);
+			hl.addComponents(b3,b,b2);
 			return hl;			
 		}).setCaption("Opciones").setExpandRatio(1);
 		
@@ -278,22 +277,39 @@ public class VwAsignacionActividad extends VerticalLayout implements View, Seria
 		return mainLayout;
 	}
 	
-	private ComboBox<Actividad> cmbActividadAsignada = new ComboBox<>();
-	private ComboBox<Dia> cmbDia = new ComboBox<>();
-	private ComboBox<Hora> cmbHora = new ComboBox<>();
+	private ComboBox<Actividad> cmbActividadAsignada = new ComboBox<>("Actividades asignadas");
+	private ComboBox<Dia> cmbDia = new ComboBox<>("Día");
+	private ComboBox<Hora> cmbHora = new ComboBox<>("Hora");
 	private Button btnAddDiaHora = new Button("Agregar");
-	private Grid<HorarioDocenteActividad> gridHorarioDocente = new Grid<HorarioDocenteActividad>();
-	private List<HorarioDocenteActividad> listHorarioDocente = new ArrayList<>();
+	private Grid<HorarioDocente> gridHorarioDocente = new Grid<HorarioDocente>();
+	private List<HorarioDocente> listHorarioDocente = new ArrayList<>();
 		
 	private void setHorario(DocenteActividad docenteAct) {
 		//cargarDatosUsuario();
 		dialogWindow dialogReactivoWindow = new dialogWindow("Gestión de horarios", VaadinIcons.CALENDAR);
 		
+		cmbActividadAsignada.clear();
 		cmbActividadAsignada.setItems(docenteAct.getActividades());
-		
+		cmbActividadAsignada.setEmptySelectionAllowed(false);
+		cmbActividadAsignada.setTextInputAllowed(false);
+		cmbActividadAsignada.setStyleName(ValoTheme.COMBOBOX_SMALL);
+		listHorarioDocente = HorarioDocenteController.getSpecificHorarioByDocente(docenteAct, cmbDia.getValue());
+		gridHorarioDocente.setItems(listHorarioDocente);
+		cmbDia.addValueChangeListener(new ValueChangeListener<Dia>() {
+			private static final long serialVersionUID = 1L;
+
+			@Override
+			public void valueChange(ValueChangeEvent<Dia> event) {
+				listHorarioDocente = HorarioDocenteController.getSpecificHorarioByDocente(docenteAct, cmbDia.getValue());
+				gridHorarioDocente.setItems(listHorarioDocente);
+			}
+		}); 
+		if(docenteAct.getActividades().size() > 0) {
+			cmbActividadAsignada.setSelectedItem(docenteAct.getActividades().get(0));
+		}	
 		//VerticalLayout vlRoot = new VerticalLayout();
 		HorizontalLayout hlInformacion = new HorizontalLayout();
-		hlInformacion.addComponents(cmbActividadAsignada,cmbDia,cmbHora,btnAddDiaHora);
+		hlInformacion.addComponents(cmbDia,cmbHora,cmbActividadAsignada,btnAddDiaHora);
 
 		dialogReactivoWindow.getCancelButton().addClickListener(e -> {
 			dialogReactivoWindow.close();
@@ -302,10 +318,10 @@ public class VwAsignacionActividad extends VerticalLayout implements View, Seria
 		VerticalLayout vroot = new VerticalLayout();
 		vroot.addComponents(hlInformacion,gridHorarioDocente);
 		vroot.setMargin(false);
-		vroot.setSpacing(false);
+		vroot.setSpacing(true);
 		
 		dialogReactivoWindow.setResponsive(true);
-		dialogReactivoWindow.setWidth("65%");
+		dialogReactivoWindow.setWidth("50%");
 		dialogReactivoWindow.addComponentBody(vroot);
 		dialogReactivoWindow.getOkButton().setVisible(false);
 		dialogReactivoWindow.getCancelButton().setCaption("Cerrar");
@@ -316,9 +332,9 @@ public class VwAsignacionActividad extends VerticalLayout implements View, Seria
 	
 	private void initSetHorario() {
 		gridHorarioDocente.setWidth("100%");
-		gridHorarioDocente.setBodyRowHeight(50);
-		gridHorarioDocente.addColumn(HorarioDocenteActividad -> HorarioDocenteActividad.getHora()).setCaption("HORA").setId("hora").setExpandRatio(0);
-		gridHorarioDocente.addColumn(HorarioDocenteActividad -> HorarioDocenteActividad.getActividad());
+		gridHorarioDocente.setBodyRowHeight(35);
+		gridHorarioDocente.addColumn(HorarioDocenteActividad -> HorarioDocenteActividad.getHora().getHoras()).setCaption("HORA").setId("hora").setExpandRatio(1);
+		gridHorarioDocente.addColumn(HorarioDocenteActividad -> HorarioDocenteActividad.getActividad()).setCaption("ACTIVIDAD").setExpandRatio(1);
 		
 		gridHorarioDocente.setSelectionMode(SelectionMode.NONE);
 		gridHorarioDocente.addComponentColumn(Usuario -> {
@@ -338,10 +354,18 @@ public class VwAsignacionActividad extends VerticalLayout implements View, Seria
 		
 		cmbDia.setItems(DiaController.findAll());
 		cmbDia.setItemCaptionGenerator(Dia::getDia);
-		
+		cmbDia.setEmptySelectionAllowed(false);
+		cmbDia.setStyleName(ValoTheme.COMBOBOX_SMALL);
+		cmbDia.setTextInputAllowed(false);
+		cmbDia.setSelectedItem(DiaController.findAll().get(0));
+				
 		cmbHora.setItems(HoraController.findAll());
-		cmbHora.setItemCaptionGenerator(Hora::getHoras);;
-		
+		cmbHora.setItemCaptionGenerator(Hora::getHoras);
+		cmbHora.setEmptySelectionAllowed(false);
+		cmbHora.setStyleName(ValoTheme.COMBOBOX_SMALL);
+		cmbHora.setTextInputAllowed(false);
+		cmbHora.setSelectedItem(HoraController.findAll().get(0));
+
 	}
 	
 	

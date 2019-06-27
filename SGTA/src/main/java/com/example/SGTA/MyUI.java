@@ -9,11 +9,7 @@ import com.vaadin.server.Responsive;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.server.VaadinServlet;
 import com.vaadin.server.VaadinSession;
-import com.vaadin.ui.Button;
-import com.vaadin.ui.Label;
-import com.vaadin.ui.TextField;
 import com.vaadin.ui.UI;
-import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.themes.ValoTheme;
 
 import views.MainView;
@@ -29,8 +25,9 @@ import views.vwLogin;
 @Viewport("user-scalable=no,initial-scale=1.0")
 @Theme("dashboard")
 public class MyUI extends UI {
+	private static final long serialVersionUID = 1L;
 
-    @Override
+	@Override
     protected void init(VaadinRequest vaadinRequest) {
     	Responsive.makeResponsive(this); 
     	addStyleName(ValoTheme.UI_WITH_MENU); 
@@ -69,5 +66,6 @@ public class MyUI extends UI {
     @WebServlet(urlPatterns = "/*", name = "MyUIServlet", asyncSupported = true)
     @VaadinServletConfiguration(ui = MyUI.class, productionMode = false)
     public static class MyUIServlet extends VaadinServlet {
+		private static final long serialVersionUID = 1L;
     }
 }

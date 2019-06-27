@@ -6,7 +6,6 @@ import java.util.List;
 import javax.persistence.Query;
 
 import models.Dia;
-import models.Rol;
 import services.JPAService;
 
 public class DiaController implements Serializable {

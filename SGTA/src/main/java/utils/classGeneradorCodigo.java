@@ -2,8 +2,6 @@
 package utils;
 
 import java.io.Serializable;
-import java.math.BigInteger;
-import java.security.SecureRandom;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 

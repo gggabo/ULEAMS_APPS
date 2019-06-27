@@ -1,9 +1,5 @@
 package viewComponents;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import com.vaadin.ui.Grid;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.MenuBar;
 import com.vaadin.ui.VerticalLayout;

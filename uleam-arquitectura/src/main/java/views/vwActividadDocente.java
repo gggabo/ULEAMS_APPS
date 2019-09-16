@@ -158,7 +158,7 @@ public class vwActividadDocente extends Div {
 			
 			HorizontalLayout hl = new HorizontalLayout();
 			hl.add(b,b2,b3);
-			return hl;			
+			return hl;			 
 		}).setHeader("Opciones").setResizable(true).setAutoWidth(true);
 		
 		//SEARCH DOCENTE

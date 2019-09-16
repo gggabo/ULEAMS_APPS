@@ -132,29 +132,32 @@ public class vwActividadDocente extends Div {
 						
 				
 			});
-			b.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
+			b.addThemeVariants(ButtonVariant.LUMO_PRIMARY, ButtonVariant.LUMO_SUCCESS);
 			b.addThemeVariants(ButtonVariant.LUMO_SMALL);
-			b.setIcon(new Icon(VaadinIcon.CALENDAR_USER));
+			b.setIcon(new Icon(VaadinIcon.TASKS));
+			b.getStyle().set("cursor", "pointer");
 			
 			Button b2 = new Button();
 			b2.addClickListener(clickb ->{  
 						
 				
 			});
-			b2.addThemeVariants(ButtonVariant.LUMO_PRIMARY, ButtonVariant.LUMO_ERROR);
+			b2.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
 			b2.addThemeVariants(ButtonVariant.LUMO_SMALL);
-			b2.setIcon(new Icon(VaadinIcon.TRASH));
+			b2.setIcon(new Icon(VaadinIcon.CALENDAR_USER));
+			b2.getStyle().set("cursor", "pointer");
 			
-			/*Button b3 = new Button();
+			Button b3 = new Button();
 			b3.addClickListener(clickb2 ->{
 				
 			});
 			b3.addThemeVariants(ButtonVariant.LUMO_PRIMARY, ButtonVariant.LUMO_ERROR);
 			b3.addThemeVariants(ButtonVariant.LUMO_SMALL);
-			b3.setIcon(new Icon(VaadinIcon.TRASH));*/
+			b3.setIcon(new Icon(VaadinIcon.TRASH));
+			b3.getStyle().set("cursor", "pointer");
 			
 			HorizontalLayout hl = new HorizontalLayout();
-			hl.add(b,b2);
+			hl.add(b,b2,b3);
 			return hl;			
 		}).setHeader("Opciones").setResizable(true).setAutoWidth(true);
 		

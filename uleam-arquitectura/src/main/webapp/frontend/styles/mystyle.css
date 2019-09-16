@@ -1,0 +1,97 @@
+@charset "ISO-8859-1";
+.main-background { 
+	background-color: #ffffff;
+	background-image: url("./images/fondoUleam.jpg");
+	background-size: auto;
+	background-repeat: no-repeat;
+	background-position: 100% 100%;
+}
+
+.image-upload{
+	border: solid 1px;
+    border-color: #c5c5c5;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.16), 0 2px 10px 0 rgba(0, 0, 0, 0.12) !important;
+}
+
+.window-footer {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    margin: calc(var(--lumo-space-l) * -1);
+    margin-top: var(--lumo-space-l);
+    padding: 0 var(--lumo-space-l);
+    background-color: var(--lumo-contrast-5pct);
+    padding-top: 5px;
+    padding-bottom: 5px;
+}
+
+.window-header{
+	display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    margin: calc(var(--lumo-space-l) * -1);
+    margin-bottom: 8px;
+    padding: 0 var(--lumo-space-l);
+    background-color: hsl(214, 82%, 47%);
+    padding-top: 5px;
+    padding-bottom: 5px;
+} 
+
+.window-title{
+	color: white;
+    font-style: inherit;
+    font-weight: 600;
+}
+
+.window-title-icon{
+    color: white;
+    font-style: inherit;
+    font-weight: 600;
+    left: -10px;
+    width: 20px;
+}
+
+.panel{
+	border-radius: var(--lumo-border-radius);
+    box-shadow: var(--lumo-box-shadow-s);
+   /* margin: var(--lumo-space-s);*/
+    height: auto;
+}
+
+.panel-header{
+	display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    /*margin: calc(var(--lumo-space-l) * -1);*/
+   /* margin-bottom: 8px;*/
+    /*padding: 0 var(--lumo-space-l);*/
+    background-color: var(--lumo-primary-color);
+    padding-top: 2px;
+    padding-bottom: 2px;
+    border-radius: var(--lumo-border-radius) var(--lumo-border-radius) 0 0;
+} 
+
+.panel-title{
+	color: white;
+    font-style: inherit;
+    font-weight: 600;
+    padding-left: 8px;
+}
+
+.panel-title-icon{
+    color: white;
+    font-style: inherit;
+    font-weight: 600;
+    left: 5px;
+    width: 15px;
+}
+
+.filter-text{
+	padding-left: 2px;
+}
+ 
+ 
+
+
+	

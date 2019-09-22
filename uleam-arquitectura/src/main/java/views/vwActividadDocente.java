@@ -1,7 +1,13 @@
 package views;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+
+import org.claspina.confirmdialog.ButtonOption;
+import org.claspina.confirmdialog.ConfirmDialog;
+import org.vaadin.olli.TwinColSelect;
 
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.button.Button;
@@ -23,10 +29,12 @@ import com.vaadin.flow.data.value.ValueChangeMode;
 
 import components.Panel;
 import components.windowDialog;
+import controllers.ActividadController;
 import controllers.DocenteActividadController;
 import controllers.PeriodoController;
 import controllers.RolController;
 import controllers.UsuarioController;
+import models.Actividad;
 import models.DocenteActividad;
 import models.Periodo;
 import models.Rol;
@@ -105,6 +113,9 @@ public class vwActividadDocente extends Div {
 		return mainPanel; 
 	}
 	
+	TwinColSelect<Actividad> twActividad = new TwinColSelect<>();
+	public List<Actividad> listActividad = new ArrayList<>();
+	
 	public void initComponets() {
 		//cmbPeriodo.setLabel("Periodo");
 		cmbPeriodo.setWidth("30%");
@@ -129,7 +140,29 @@ public class vwActividadDocente extends Div {
 			 
 			Button b = new Button();
 			b.addClickListener(clickb ->{  
-						
+				twActividad.clear();
+				
+				Set<Actividad> act = new HashSet<>(Usuario.getActividades());
+				twActividad.setValue(act);
+				twActividad.addSelectionListener(e->{
+					
+				});
+				
+				ConfirmDialog.create()
+			    .withCaption("Selección de actividades")
+			    .withMessage(twActividad)
+			    .withCancelButton(ButtonOption.caption("Cancelar"), ButtonOption.icon(VaadinIcon.CLOSE))
+			    .withOkButton(() -> {
+			        
+			    	Usuario.setActividades(new ArrayList<>(twActividad.getValue()));
+					
+					DocenteActividadController.update(Usuario);
+					
+					listActividadDocente = DocenteActividadController.getAllByPeriodo(cmbPeriodo.getValue().getIdPerido(), rolAdmin, rolDocente);
+					gridActividadDocente.setItems(listActividadDocente);
+			    	
+			    }, ButtonOption.focus(), ButtonOption.caption("Aceptar"),ButtonOption.icon(VaadinIcon.CHECK))
+			    .open(); 
 				
 			});
 			b.addThemeVariants(ButtonVariant.LUMO_PRIMARY, ButtonVariant.LUMO_SUCCESS);
@@ -219,6 +252,10 @@ public class vwActividadDocente extends Div {
 		cmbPeriodo.setItemLabelGenerator(Periodo::getPeriodo);
 		cmbPeriodo.setEmptySelectionAllowed(false); 
 		cmbPeriodo.setValue(PeriodoController.getMaxPeriodo());
+		
+		listActividad = ActividadController.findAll();
+		twActividad.setItems(new HashSet<Actividad>(listActividad));
+		 
 	}
 	
 	private void setEvents() {

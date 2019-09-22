@@ -65,9 +65,9 @@ public class DocenteActividadController implements Serializable {
 	@SuppressWarnings("unchecked")
 	public static List<DocenteActividad> search(long idPeriodo, String searchField){
 		return JPAService.runInTransaction(em ->{
-			Query query = em.createQuery("select da from DocenteActividad da where da.periodo.idPerido = ?1 and da.docente.estado = 1 and" 
-					+"(concat (da.docente.apellido_paterno,' ',da.docente.apellido_materno,' ',da.docente.nombre_uno,' ',da.docente.nombre_dos) LIKE ?2" 
-					+"or da.docente.cedula LIKE ?2)"
+			Query query = em.createQuery("select da from DocenteActividad da where da.periodo.idPeriodo = ?1 and da.docente.estado = 1 and" 
+					+"(concat (da.docente.apellido_paterno,' ',da.docente.apellido_materno,' ',da.docente.nombre_uno,' ',da.docente.nombre_dos) LIKE ?2 " 
+					+"or da.docente.Cedula LIKE ?2)"
 					);
 			query.setParameter(1, idPeriodo);
 			query.setParameter(2, "%" + searchField + "%");
